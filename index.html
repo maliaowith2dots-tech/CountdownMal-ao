@@ -107,7 +107,6 @@
     <div class="form-wrap">
       <p>Be the first to hear when it drops — join the list 👇</p>
       <form action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSfY-uGloqACsaDQ4FrtxFkbmlqpo6cumsQ4nCwrQ1dUEt6Xsw/formResponse" method="POST" target="_blank">
-        <!-- replace entry.1234567890 with your actual field name -->
         <input type="email" name="entry.649502797" placeholder="Enter your email" required>
         <button type="submit">Notify Me</button>
       </form>
@@ -117,23 +116,41 @@
   </main>
 
 <script>
-  const TARGET=new Date('2025-11-07T00:00:00');
-  const OUT_LINK='https://bit.ly/maliao_spotify';
-  const els={d:document.getElementById('d'),h:document.getElementById('h'),m:document.getElementById('m'),s:document.getElementById('s'),cta:document.getElementById('cta'),note:document.getElementById('note')};
-  function pad(n){return String(n).padStart(2,'0');}
+  const TARGET = new Date('2025-11-07T00:00:00');
+  const REDIRECT_URL = 'https://maliaowith2dots-tech.github.io/FRIDAY/';
+  const els = {
+    d: document.getElementById('d'),
+    h: document.getElementById('h'),
+    m: document.getElementById('m'),
+    s: document.getElementById('s')
+  };
+
+  function pad(n){ return String(n).padStart(2,'0'); }
+
   function tick(){
-    const now=new Date();let ms=TARGET-now;
-    if(ms<=0){els.d.textContent='00';els.h.textContent='00';els.m.textContent='00';els.s.textContent='00';els.note.textContent='C’est maintenant disponible.';els.cta.style.display='inline-block';els.cta.href=OUT_LINK;clearInterval(timer);return;}
-    const sec=Math.floor(ms/1000);const days=Math.floor(sec/86400);
-    const hours=Math.floor((sec%86400)/3600);
-    const mins=Math.floor((sec%3600)/60);
-    const secs=sec%60;
-    els.d.textContent=pad(days);
-    els.h.textContent=pad(hours);
-    els.m.textContent=pad(mins);
-    els.s.textContent=pad(secs);
+    const now = new Date();
+    let ms = TARGET - now;
+
+    // 🚀 Redirection immédiate dès que le compte à rebours est terminé
+    if(ms <= 0){
+      window.location.href = REDIRECT_URL;
+      return;
+    }
+
+    const sec = Math.floor(ms / 1000);
+    const days = Math.floor(sec / 86400);
+    const hours = Math.floor((sec % 86400) / 3600);
+    const mins = Math.floor((sec % 3600) / 60);
+    const secs = sec % 60;
+
+    els.d.textContent = pad(days);
+    els.h.textContent = pad(hours);
+    els.m.textContent = pad(mins);
+    els.s.textContent = pad(secs);
   }
-  tick();const timer=setInterval(tick,1000);
+
+  tick();
+  const timer = setInterval(tick, 1000);
 </script>
 </body>
 </html>
