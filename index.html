@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Malïao — Countdown</title>
 <meta name="description" content="Countdown to November 7 — Malïao">
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6VWXFRJZR0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-6VWXFRJZR0');
+</script>
+
 <style>
   :root{
     --fg:#fff;
@@ -218,9 +228,7 @@
 
   function openModal(){
     modalBackdrop.classList.add('show');
-    // focus the primary action for accessibility
     setTimeout(()=> modalOk.focus(), 0);
-    // lock scroll behind the modal
     document.body.style.overflow = 'hidden';
   }
   function closeModal(){
