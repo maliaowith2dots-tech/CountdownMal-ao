@@ -14,81 +14,87 @@
   }
   *{box-sizing:border-box}
   html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--fg)}
-  body{
-    display:grid; place-items:center; overflow:hidden;
-  }
-  /* Pochette floue en fond */
+  body{display:grid;place-items:center;overflow:hidden;}
   body::before{
-    content:"";
-    position:fixed; inset:0;
-    background:
-      linear-gradient(rgba(0,0,0,.50), rgba(0,0,0,.65)),
+    content:"";position:fixed;inset:0;
+    background:linear-gradient(rgba(0,0,0,.50),rgba(0,0,0,.65)),
       url("https://raw.githubusercontent.com/maliaowith2dots-tech/FRIDAY/refs/heads/main/Cover%20V7.png") center/cover no-repeat;
-    filter: blur(26px) brightness(0.85);
-    transform: scale(1.08);
-    z-index:-2;
+    filter:blur(26px) brightness(0.85);transform:scale(1.08);z-index:-2;
   }
-  /* Vignettage doux pour focaliser */
   body::after{
-    content:"";
-    position:fixed; inset:0;
-    background: radial-gradient(60% 60% at 50% 45%, rgba(0,0,0,.05) 0%, rgba(0,0,0,.55) 100%);
+    content:"";position:fixed;inset:0;
+    background:radial-gradient(60% 60% at 50% 45%,rgba(0,0,0,.05) 0%,rgba(0,0,0,.55) 100%);
     z-index:-1;
   }
 
-  .wrap{width:min(920px,92vw); padding:24px}
-  .title{
-    text-align:center; letter-spacing:.04em; font-weight:800; font-size:clamp(20px,4vw,28px);
-    margin:0 0 10px;
-  }
-  .subtitle{
-    text-align:center; color:var(--muted); font-weight:600; letter-spacing:.12em;
-    font-size:clamp(11px,1.8vw,12.5px); text-transform:uppercase; margin:0 0 22px;
-  }
+  .wrap{width:min(920px,92vw);padding:24px}
+  .title{text-align:center;letter-spacing:.04em;font-weight:800;font-size:clamp(20px,4vw,28px);margin:0 0 10px;}
+  .subtitle{text-align:center;color:var(--muted);font-weight:600;letter-spacing:.12em;font-size:clamp(11px,1.8vw,12.5px);text-transform:uppercase;margin:0 0 22px;}
 
   .timer{
-    display:grid; grid-template-columns:repeat(4,1fr); gap:14px;
-    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18);
-    border-radius:18px; padding:18px; backdrop-filter: blur(6px);
-    box-shadow: var(--shadow);
+    display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);
+    border-radius:18px;padding:18px;backdrop-filter:blur(6px);
+    box-shadow:var(--shadow);
   }
   .unit{
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
-    padding:12px; border-radius:14px; background:rgba(0,0,0,.22); border:1px solid rgba(255,255,255,.12);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+    padding:12px;border-radius:14px;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.12);
   }
-  .num{
-    font-variant-numeric: tabular-nums; font-size:clamp(32px,9vw,64px); line-height:1; font-weight:900;
-  }
-  .lab{ text-transform:uppercase; letter-spacing:.16em; font-size:11px; color:var(--muted); font-weight:700 }
+  .num{font-variant-numeric:tabular-nums;font-size:clamp(32px,9vw,64px);line-height:1;font-weight:900;}
+  .lab{text-transform:uppercase;letter-spacing:.16em;font-size:11px;color:var(--muted);font-weight:700}
 
-  .note{ text-align:center; color:var(--muted); font-size:12.5px; margin:14px 0 0 }
+  .note{text-align:center;color:var(--muted);font-size:12.5px;margin:14px 0 0}
+
+  /* email form */
+  .form-wrap{
+    margin:28px auto 0;
+    max-width:460px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:18px;
+    padding:18px 20px 20px;
+    text-align:center;
+    backdrop-filter:blur(8px);
+  }
+  .form-wrap p{font-size:14px;color:var(--muted);margin:0 0 12px;}
+  form{display:flex;gap:10px;justify-content:center;}
+  input[type="email"]{
+    flex:1;
+    padding:10px 14px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.25);
+    background:rgba(0,0,0,.35);
+    color:#fff;font-size:14px;outline:none;
+  }
+  input[type="email"]::placeholder{color:rgba(255,255,255,.6)}
+  button[type="submit"]{
+    padding:10px 16px;border-radius:999px;border:0;
+    background:var(--accent);color:#111;font-weight:700;cursor:pointer;
+  }
+  button[type="submit"]:hover{filter:brightness(0.95)}
 
   .cta{
-    display:none; /* devient visible à la fin du compte */
-    margin:18px auto 0; width:fit-content;
-    padding:12px 18px; border-radius:999px; border:1px solid rgba(255,255,255,.2);
-    background:rgba(255,255,255,.14); color:#111; font-weight:800; letter-spacing:.04em;
-    backdrop-filter: blur(6px);
-    box-shadow: var(--shadow);
-    text-decoration:none;
+    display:none;margin:18px auto 0;width:fit-content;
+    padding:12px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.2);
+    background:rgba(255,255,255,.14);color:#111;font-weight:800;letter-spacing:.04em;
+    backdrop-filter:blur(6px);box-shadow:var(--shadow);text-decoration:none;
   }
-  .cta span{ color:#000; background:var(--accent); padding:.2em .5em; border-radius:6px; }
+  .cta span{color:#000;background:var(--accent);padding:.2em .5em;border-radius:6px;}
 
-  @media (max-width:560px){
+  @media(max-width:560px){
     .timer{grid-template-columns:repeat(2,1fr)}
-  }
-  @media (prefers-reduced-motion:reduce){
-    body::before{filter: blur(26px) brightness(0.9)}
-    .timer,.unit{transition:none}
+    form{flex-direction:column;}
+    button[type="submit"]{width:100%;}
   }
 </style>
 </head>
 <body>
   <main class="wrap" role="main">
     <h1 class="title">FRIDAY</h1>
-    <p class="subtitle"></p>
+    <p class="subtitle">OUT SOON</p>
 
-    <section class="timer" aria-label="Compte à rebours">
+    <section class="timer" aria-label="Countdown">
       <div class="unit"><div id="d" class="num">00</div><div class="lab">Days</div></div>
       <div class="unit"><div id="h" class="num">00</div><div class="lab">Hours</div></div>
       <div class="unit"><div id="m" class="num">00</div><div class="lab">Minutes</div></div>
@@ -97,62 +103,37 @@
 
     <p id="note" class="note"></p>
 
-    <!-- Bouton qui apparaît quand le compteur termine (optionnel) -->
+    <!-- email capture -->
+    <div class="form-wrap">
+      <p>Be the first to hear when it drops — join the list 👇</p>
+      <form action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSfY-uGloqACsaDQ4FrtxFkbmlqpo6cumsQ4nCwrQ1dUEt6Xsw/formResponse" method="POST" target="_blank">
+        <!-- replace entry.1234567890 with your actual field name -->
+        <input type="email" name="entry.649502797" placeholder="Enter your email" required>
+        <button type="submit">Notify Me</button>
+      </form>
+    </div>
+
     <a id="cta" class="cta" href="#" target="_blank" rel="noopener">🎧 <span>OUT&nbsp;NOW</span> — écouter</a>
   </main>
 
 <script>
-  // === Réglages ===
-  // Compte jusqu'au 7 novembre à 00:00 (heure locale du visiteur)
-  const TARGET = new Date('2025-11-07T00:00:00');
-
-  // Option : où envoyer quand c'est "OUT NOW"
-  const OUT_LINK = 'https://bit.ly/maliao_spotify'; // change par ton smart link
-
-  const els = {
-    d: document.getElementById('d'),
-    h: document.getElementById('h'),
-    m: document.getElementById('m'),
-    s: document.getElementById('s'),
-    cta: document.getElementById('cta'),
-    note: document.getElementById('note')
-  };
-
-  function pad(n){ return String(n).padStart(2,'0'); }
-
+  const TARGET=new Date('2025-11-07T00:00:00');
+  const OUT_LINK='https://bit.ly/maliao_spotify';
+  const els={d:document.getElementById('d'),h:document.getElementById('h'),m:document.getElementById('m'),s:document.getElementById('s'),cta:document.getElementById('cta'),note:document.getElementById('note')};
+  function pad(n){return String(n).padStart(2,'0');}
   function tick(){
-    const now = new Date();
-    let ms = TARGET - now;
-
-    if (ms <= 0){
-      // Fin du compte
-      els.d.textContent = '00';
-      els.h.textContent = '00';
-      els.m.textContent = '00';
-      els.s.textContent = '00';
-      els.note.textContent = 'C’est maintenant disponible.';
-      els.cta.style.display = 'inline-block';
-      els.cta.href = OUT_LINK;
-      els.cta.setAttribute('aria-live','polite');
-      clearInterval(timer);
-      return;
-    }
-
-    const sec = Math.floor(ms/1000);
-    const days = Math.floor(sec / 86400);
-    const hours = Math.floor((sec % 86400) / 3600);
-    const mins = Math.floor((sec % 3600) / 60);
-    const secs = sec % 60;
-
-    els.d.textContent = pad(days);
-    els.h.textContent = pad(hours);
-    els.m.textContent = pad(mins);
-    els.s.textContent = pad(secs);
+    const now=new Date();let ms=TARGET-now;
+    if(ms<=0){els.d.textContent='00';els.h.textContent='00';els.m.textContent='00';els.s.textContent='00';els.note.textContent='C’est maintenant disponible.';els.cta.style.display='inline-block';els.cta.href=OUT_LINK;clearInterval(timer);return;}
+    const sec=Math.floor(ms/1000);const days=Math.floor(sec/86400);
+    const hours=Math.floor((sec%86400)/3600);
+    const mins=Math.floor((sec%3600)/60);
+    const secs=sec%60;
+    els.d.textContent=pad(days);
+    els.h.textContent=pad(hours);
+    els.m.textContent=pad(mins);
+    els.s.textContent=pad(secs);
   }
-
-  // Démarrage
-  tick();
-  const timer = setInterval(tick, 1000);
+  tick();const timer=setInterval(tick,1000);
 </script>
 </body>
 </html>
