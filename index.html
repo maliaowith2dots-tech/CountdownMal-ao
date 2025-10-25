@@ -1,16 +1,19 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Malïao — Countdown</title>
-<meta name="description" content="Compte à rebours jusqu'au 7 novembre — Malïao">
+<meta name="description" content="Countdown to November 7 — Malïao">
 <style>
   :root{
     --fg:#fff;
     --muted:#d7d7d7;
     --accent:#ffe27a;
     --shadow: 0 20px 60px rgba(0,0,0,.35);
+    --error:#ff8a8a;
+    --glass: rgba(255,255,255,.08);
+    --glassBorder: rgba(255,255,255,.18);
   }
   *{box-sizing:border-box}
   html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--fg)}
@@ -33,7 +36,7 @@
 
   .timer{
     display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
-    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);
+    background:var(--glass);border:1px solid var(--glassBorder);
     border-radius:18px;padding:18px;backdrop-filter:blur(6px);
     box-shadow:var(--shadow);
   }
@@ -50,15 +53,15 @@
   .form-wrap{
     margin:28px auto 0;
     max-width:460px;
-    background:rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.18);
+    background:var(--glass);
+    border:1px solid var(--glassBorder);
     border-radius:18px;
     padding:18px 20px 20px;
     text-align:center;
     backdrop-filter:blur(8px);
   }
   .form-wrap p{font-size:14px;color:var(--muted);margin:0 0 12px;}
-  form{display:flex;gap:10px;justify-content:center;}
+  form{display:flex;gap:10px;justify-content:center;align-items:flex-start}
   input[type="email"]{
     flex:1;
     padding:10px 14px;
@@ -66,13 +69,27 @@
     border:1px solid rgba(255,255,255,.25);
     background:rgba(0,0,0,.35);
     color:#fff;font-size:14px;outline:none;
+    transition:border-color .2s ease, box-shadow .2s ease;
   }
   input[type="email"]::placeholder{color:rgba(255,255,255,.6)}
+  input[type="email"].error{
+    border-color: var(--error);
+    box-shadow: 0 0 0 3px rgba(255,0,0,.15);
+  }
+  .error-text{
+    text-align:left;
+    color: var(--error);
+    font-size:12px;
+    margin:6px 0 0 14px;
+    min-height: 16px;
+  }
   button[type="submit"]{
     padding:10px 16px;border-radius:999px;border:0;
     background:var(--accent);color:#111;font-weight:700;cursor:pointer;
+    transition:filter .2s ease, opacity .2s ease;
   }
   button[type="submit"]:hover{filter:brightness(0.95)}
+  button[disabled]{opacity:.6;cursor:not-allowed}
 
   .cta{
     display:none;margin:18px auto 0;width:fit-content;
@@ -82,10 +99,36 @@
   }
   .cta span{color:#000;background:var(--accent);padding:.2em .5em;border-radius:6px;}
 
+  /* Modal (thank-you popup) */
+  .modal-backdrop{
+    position:fixed;inset:0;background:rgba(0,0,0,.5);
+    display:none;align-items:center;justify-content:center;
+    z-index:1000;
+  }
+  .modal-backdrop.show{display:flex;}
+  .modal{
+    width:min(420px,90vw);
+    background:var(--glass);
+    border:1px solid var(--glassBorder);
+    border-radius:16px;
+    box-shadow:var(--shadow);
+    backdrop-filter:blur(10px);
+    padding:20px;
+  }
+  .modal h4{margin:0 0 6px;font-size:18px;font-weight:800;letter-spacing:.02em}
+  .modal p{margin:6px 0 14px;color:var(--muted);font-size:14px}
+  .modal .row{display:flex;gap:10px;justify-content:flex-end}
+  .modal button{
+    padding:10px 14px;border-radius:999px;border:0;cursor:pointer;font-weight:800;
+  }
+  .btn-primary{background:var(--accent);color:#111}
+  .btn-ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.18)}
+
   @media(max-width:560px){
     .timer{grid-template-columns:repeat(2,1fr)}
     form{flex-direction:column;}
     button[type="submit"]{width:100%;}
+    .error-text{margin-left:0}
   }
 </style>
 </head>
@@ -106,14 +149,28 @@
     <!-- email capture -->
     <div class="form-wrap">
       <p>Be the first to hear when it drops — join the list 👇</p>
-      <form action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSfY-uGloqACsaDQ4FrtxFkbmlqpo6cumsQ4nCwrQ1dUEt6Xsw/formResponse" method="POST" target="_blank">
-        <input type="email" name="entry.649502797" placeholder="Enter your email" required>
-        <button type="submit">Notify Me</button>
+
+      <form id="join-form" action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSfY-uGloqACsaDQ4FrtxFkbmlqpo6cumsQ4nCwrQ1dUEt6Xsw/formResponse" method="POST" novalidate>
+        <input id="email" type="email" name="entry.649502797" placeholder="Enter your email" required>
+        <button id="submitBtn" type="submit">Notify Me</button>
       </form>
+      <div id="email-error" class="error-text" aria-live="polite"></div>
     </div>
 
-    <a id="cta" class="cta" href="#" target="_blank" rel="noopener">🎧 <span>OUT&nbsp;NOW</span> — écouter</a>
+    <a id="cta" class="cta" href="#" target="_blank" rel="noopener">🎧 <span>OUT&nbsp;NOW</span> — listen</a>
   </main>
+
+  <!-- Thank-you Modal -->
+  <div id="modal-backdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="thanks-title">
+    <div class="modal">
+      <h4 id="thanks-title">You’re in. Thank you!💛 </h4>
+      <p>New songs, behind-the-scenes, and drops will arrive in your inbox before anywhere else.</p>
+      <div class="row">
+        <button class="btn-ghost" id="modal-close">Close</button>
+        <button class="btn-primary" id="modal-ok">OK</button>
+      </div>
+    </div>
+  </div>
 
 <script>
   const TARGET = new Date('2025-11-07T00:00:00');
@@ -126,31 +183,105 @@
   };
 
   function pad(n){ return String(n).padStart(2,'0'); }
-
   function tick(){
     const now = new Date();
     let ms = TARGET - now;
-
-    // 🚀 Redirection immédiate dès que le compte à rebours est terminé
-    if(ms <= 0){
-      window.location.href = REDIRECT_URL;
-      return;
-    }
-
+    if(ms <= 0){ window.location.href = REDIRECT_URL; return; }
     const sec = Math.floor(ms / 1000);
     const days = Math.floor(sec / 86400);
     const hours = Math.floor((sec % 86400) / 3600);
     const mins = Math.floor((sec % 3600) / 60);
     const secs = sec % 60;
-
     els.d.textContent = pad(days);
     els.h.textContent = pad(hours);
     els.m.textContent = pad(mins);
     els.s.textContent = pad(secs);
   }
+  tick(); setInterval(tick, 1000);
 
-  tick();
-  const timer = setInterval(tick, 1000);
+  // ---------- Email validation ----------
+  function isValidEmail(email){
+    if(!email || email.length > 254) return false;
+    const basic = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    if(!basic.test(email)) return false;
+    const [local, domain] = email.split('@');
+    if(!local || !domain) return false;
+    if(local.length > 64) return false;
+    if(domain.split('.').some(part => !part || part.length > 63)) return false;
+    return true;
+  }
+
+  // ---------- Modal helpers ----------
+  const modalBackdrop = document.getElementById('modal-backdrop');
+  const modalClose = document.getElementById('modal-close');
+  const modalOk = document.getElementById('modal-ok');
+
+  function openModal(){
+    modalBackdrop.classList.add('show');
+    // focus the primary action for accessibility
+    setTimeout(()=> modalOk.focus(), 0);
+    // lock scroll behind the modal
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(){
+    modalBackdrop.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  modalClose.addEventListener('click', closeModal);
+  modalOk.addEventListener('click', closeModal);
+  modalBackdrop.addEventListener('click', (e)=>{ if(e.target === modalBackdrop) closeModal(); });
+  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && modalBackdrop.classList.contains('show')) closeModal(); });
+
+  // ---------- Form logic ----------
+  const form = document.getElementById('join-form');
+  const emailInput = document.getElementById('email');
+  const errorBox = document.getElementById('email-error');
+  const submitBtn = document.getElementById('submitBtn');
+
+  emailInput.addEventListener('input', ()=>{
+    emailInput.classList.remove('error');
+    errorBox.textContent = '';
+  });
+
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault(); // never navigate away
+    const email = (emailInput.value || '').trim();
+
+    // validate
+    if(!isValidEmail(email)){
+      emailInput.classList.add('error');
+      errorBox.textContent = 'Invalid email address. Example: name@example.com';
+      emailInput.focus();
+      return;
+    }
+
+    // prevent double submit
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending…';
+
+    try{
+      // send silently to Google Forms
+      const fd = new FormData();
+      fd.append('entry.649502797', email);
+
+      await fetch(form.action, { method: 'POST', mode: 'no-cors', body: fd });
+
+      // success UI
+      localStorage.setItem('subscribed_email', email);
+      form.reset();
+      openModal();
+
+    } catch(err){
+      errorBox.textContent = 'Could not send right now. Please try again in a moment.';
+    } finally{
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Notify Me';
+    }
+  });
+
+  // Optional: light UX if already subscribed on this device
+  const prev = localStorage.getItem('subscribed_email');
+  if(prev){ emailInput.placeholder = 'You’re already in — add another?'; }
 </script>
 </body>
 </html>
